@@ -215,8 +215,30 @@ namespace NwOrdersAPI
             var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
 
             return await Database.ExecuteSqlRawAsync("EXEC [dbo].[UpdateOrder] @orderID, @customerID, @requiredDate, @freight, @shipCity, @shipCountry", orderIdParam, customerIdParam, requiredDateParam, freightParam, shipCityParam, shipCountryParam);
-        }             
+        }
 
+        public async Task<int> UpdateOrderItemAsync(int? orderId, int? productId, int? quantity, float? discount)
+        {
+            var orderIdParam = new SqlParameter { ParameterName = "@orderID", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = orderId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!orderId.HasValue)
+                orderIdParam.Value = DBNull.Value;
+
+            var productIdParam = new SqlParameter { ParameterName = "@productID", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = productId.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!productId.HasValue)
+                productIdParam.Value = DBNull.Value;
+
+            var quantityParam = new SqlParameter { ParameterName = "@quantity", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Input, Value = quantity.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!quantity.HasValue)
+                quantityParam.Value = DBNull.Value;
+
+            var discountParam = new SqlParameter { ParameterName = "@discount", SqlDbType = SqlDbType.Decimal, Direction = ParameterDirection.Input, Value = discount.GetValueOrDefault(), Precision = 10, Scale = 0 };
+            if (!discount.HasValue)
+                discountParam.Value = DBNull.Value;
+
+            var procResultParam = new SqlParameter { ParameterName = "@procResult", SqlDbType = SqlDbType.Int, Direction = ParameterDirection.Output };
+
+            return await Database.ExecuteSqlRawAsync("EXEC [dbo].[UpdateOrderItem] @orderID, @productID, @quantity, @discount", orderIdParam, productIdParam, quantityParam, discountParam);
+        }
         public async Task<List<Customer>> SelectAllCustomersAsync()
         {
             const string sqlCommand = "EXEC [dbo].[SelectAllCustomers]";

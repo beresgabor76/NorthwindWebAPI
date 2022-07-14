@@ -84,6 +84,7 @@ namespace NwOrdersAPI
         Task<SelectOrderReturnModel> SelectOrderAsync(int? orderId);
         Task<List<SelectOrderItemsReturnModel>> SelectOrderItemsAsync(int? orderId);
         Task<int> UpdateOrderAsync(int? orderId, string customerId, DateTime? requiredDate, decimal? freight, string shipCity, string shipCountry);
+        Task<int> UpdateOrderItemAsync(int? orderId, int? productId, int? quantity, float? discount);    
         Task<List<Customer>> SelectAllCustomersAsync();
         Task<List<Product>> SelectAllProductsAsync();
     }

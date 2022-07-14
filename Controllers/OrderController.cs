@@ -93,5 +93,12 @@ namespace NwOrdersAPI.Controllers
             await _context.UpdateOrderAsync(dto.OrderID, dto.CustomerID, dto.RequiredDate, dto.Freight, dto.ShipCity, dto.ShipCountry);
             return Ok("Order has been updated."); 
         }
+
+        [HttpPut("item")]
+        public async Task<ActionResult<string>> UpdateOrderItem([FromBody] CreateOrderItemDto dto)
+        {
+            await _context.UpdateOrderItemAsync(dto.OrderID, dto.ProductID, dto.Quantity, dto.Discount);
+            return Ok(JsonSerializer.Serialize("Item has been updated."));
+        }
     }
 }
