@@ -21,7 +21,7 @@ namespace NwOrdersAPI.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<UserTokenDto>> RegisterUser([FromBody] RegisterUserDto dto)
+        public async Task<ActionResult<UserTokenDto>> RegisterUser([FromBody] UserLoginDto dto)
         {
             using HMACSHA512 hmac = new HMACSHA512();
             byte[] passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password));
@@ -48,7 +48,7 @@ namespace NwOrdersAPI.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UserTokenDto>> LoginUser(RegisterUserDto dto)
+        public async Task<ActionResult<UserTokenDto>> LoginUser(UserLoginDto dto)
         { 
             User user = await _context.SelectUserAsync(dto.Username);
             if (user == null)

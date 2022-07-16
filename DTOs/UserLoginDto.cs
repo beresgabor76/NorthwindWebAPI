@@ -2,7 +2,7 @@
 
 namespace NwOrdersAPI.DTOs
 {
-    public class RegisterUserDto
+    public class UserLoginDto
     {
         [Required]
         [MinLength(3)]
