@@ -4,15 +4,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 using NwOrdersAPI.Entities;
-using NwOrdersAPI.DTOs;
+
 
 namespace NwOrdersAPI
 {
@@ -87,6 +81,8 @@ namespace NwOrdersAPI
         Task<int> UpdateOrderItemAsync(int? orderId, int? productId, int? quantity, float? discount);    
         Task<List<Customer>> SelectAllCustomersAsync();
         Task<List<Product>> SelectAllProductsAsync();
+        Task<int> CreateUserAsync(string username, byte[] passwordHash, byte[] passwordSalt);
+        Task<User> SelectUserAsync(string username);
     }
 }
 // </auto-generated>

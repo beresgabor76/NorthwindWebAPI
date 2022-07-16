@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NwOrdersAPI.DTOs;
 using System.Text.Json;
@@ -17,6 +18,7 @@ namespace NwOrdersAPI.Controllers
             _mapper = mapper;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<string>> CreateOrder([FromBody] CreateOrderDto dto)
         {
@@ -24,6 +26,7 @@ namespace NwOrdersAPI.Controllers
             return Ok(JsonSerializer.Serialize("Order has been created.")); 
         }
 
+        [Authorize]
         [HttpPost("item")]
         public async Task<ActionResult<string>> AddToOrder([FromBody] CreateOrderItemDto dto)
         {
@@ -59,6 +62,7 @@ namespace NwOrdersAPI.Controllers
             return Ok(_mapper.Map<IEnumerable<OrderItemsDto>>(items));
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<string>> DeleteOrder([FromRoute] int id)
         {
@@ -66,6 +70,7 @@ namespace NwOrdersAPI.Controllers
             return Ok(JsonSerializer.Serialize("Order has been deleted."));
         }
 
+        [Authorize]
         [HttpDelete("item/{orderID}/{productID}")]
         public async Task<ActionResult<string>> DeleteOrder([FromRoute] int orderID, int productID)
         {
@@ -87,6 +92,7 @@ namespace NwOrdersAPI.Controllers
             return Ok(_mapper.Map<IEnumerable<CustomerDto>>(customers));
         }
 
+        [Authorize]
         [HttpPut]
         public async Task<ActionResult<string>> UpdateOrder([FromBody] OrderDto dto)
         {
@@ -94,6 +100,7 @@ namespace NwOrdersAPI.Controllers
             return Ok("Order has been updated."); 
         }
 
+        [Authorize]
         [HttpPut("item")]
         public async Task<ActionResult<string>> UpdateOrderItem([FromBody] CreateOrderItemDto dto)
         {

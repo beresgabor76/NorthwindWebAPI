@@ -3,16 +3,10 @@
 
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlTypes;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using NwOrdersAPI.Entities;
-using NwOrdersAPI.DTOs;
+
 
 namespace NwOrdersAPI
 {
@@ -38,6 +32,7 @@ namespace NwOrdersAPI
         public DbSet<OrderDetail> OrderDetails { get; set; } // Order Details
         public DbSet<Product> Products { get; set; } // Products
         public DbSet<Supplier> Suppliers { get; set; } // Suppliers
+        public DbSet<User> Users { get; set; } // Users
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -257,6 +252,37 @@ namespace NwOrdersAPI
                 .ToListAsync();
 
             return procResultData;
+        }
+
+        public async Task<int> CreateUserAsync(string username, byte[] passwordHash, byte[] passwordSalt)
+        {
+            var usernameParam = new SqlParameter { ParameterName = "@username", SqlDbType = SqlDbType.VarChar, Direction = ParameterDirection.Input, Value = username, Size = 255 };
+            if (usernameParam.Value == null)
+                usernameParam.Value = DBNull.Value;
+
+            var passwordHashParam = new SqlParameter { ParameterName = "@passwordHash", SqlDbType = SqlDbType.Binary, Direction = ParameterDirection.Input, Value = passwordHash, Size = 128 };
+            if (passwordHashParam.Value == null)
+                passwordHashParam.Value = DBNull.Value;
+
+            var passwordSaltParam = new SqlParameter { ParameterName = "@passwordSalt", SqlDbType = SqlDbType.Binary, Direction = ParameterDirection.Input, Value = passwordSalt, Size = 128 };
+            if (passwordSaltParam.Value == null)
+                passwordSaltParam.Value = DBNull.Value;
+
+            return await Database.ExecuteSqlRawAsync("EXEC [dbo].[CreateUser] @username, @passwordHash, @passwordSalt", usernameParam, passwordHashParam, passwordSaltParam);
+
+        }
+        public async Task<User> SelectUserAsync(string username)
+        {
+            var usernameParam = new SqlParameter { ParameterName = "@username", SqlDbType = SqlDbType.VarChar, Direction = ParameterDirection.Input, Value = username, Size = 255 };
+            if (usernameParam.Value == null)
+                usernameParam.Value = DBNull.Value;
+
+            const string sqlCommand = "EXEC [dbo].[SelectUser] @username";
+            var procResultData = await Set<User>()
+                .FromSqlRaw(sqlCommand, usernameParam)
+                .ToListAsync();
+
+            return procResultData.Count > 0 ? procResultData[0] : null;
         }
     }
 }
